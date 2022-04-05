@@ -68,41 +68,46 @@
 % <docid:wlan_ug#example-HEParameterizationExample 802.11ax
 % Parameterization for Waveform Generation and Simulation> example.
 
-% MU-MIMO configuration - 4 users on one 242-tone RU
-cfgMUMIMO = wlanHEMUConfig(195);
+clear all; close all; clc;
 
-%%
-% The allocation plot shows a single RU is assigned to all four users.
-
-showAllocation(cfgMUMIMO);
-
-%%
-% The transmission parameters for each user are now configured.
-
-numTx = 6; % Number of transmit antennas
-guardInterval = 0.8; % Guard interval in Microseconds
-
-% Configure common parameters for all users
-cfgMUMIMO.NumTransmitAntennas = numTx;
-cfgMUMIMO.GuardInterval = guardInterval;
-
-% Configure per user parameters
-% STA #1
-cfgMUMIMO.User{1}.NumSpaceTimeStreams = 1;
-cfgMUMIMO.User{1}.MCS = 4;
-cfgMUMIMO.User{1}.APEPLength = 1000;
-% STA #2
-cfgMUMIMO.User{2}.NumSpaceTimeStreams = 1;
-cfgMUMIMO.User{2}.MCS = 4;
-cfgMUMIMO.User{2}.APEPLength = 1000;
-% STA #3
-cfgMUMIMO.User{3}.NumSpaceTimeStreams = 1;
-cfgMUMIMO.User{3}.MCS = 4;
-cfgMUMIMO.User{3}.APEPLength = 1000;
-% STA #4
-cfgMUMIMO.User{4}.NumSpaceTimeStreams = 1;
-cfgMUMIMO.User{4}.MCS = 4;
-cfgMUMIMO.User{4}.APEPLength = 1000;
+% % % % % % % % % % % % % % % % % % % % % % % % MU-MIMO configuration - 4 users on one 242-tone RU
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO = wlanHEMUConfig(195);
+% % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % %%
+% % % % % % % % % % % % % % % % % % % % % % % % The allocation plot shows a single RU is assigned to all four users.
+% % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % showAllocation(cfgMUMIMO);
+% % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % %%
+% % % % % % % % % % % % % % % % % % % % % % % % The transmission parameters for each user are now configured.
+% % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % numTx = 6; % Number of transmit antennas
+% % % % % % % % % % % % % % % % % % % % % % % guardInterval = 0.8; % Guard interval in Microseconds
+% % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % Configure common parameters for all users
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.NumTransmitAntennas = numTx;
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.GuardInterval = guardInterval;
+% % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % MCS = 4;
+% % % % % % % % % % % % % % % % % % % % % % % APEPLength = 1000;
+% % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % Configure per user parameters
+% % % % % % % % % % % % % % % % % % % % % % % % STA #1
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{1}.NumSpaceTimeStreams = 1;
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{1}.MCS = MCS;
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{1}.APEPLength = APEPLength;
+% % % % % % % % % % % % % % % % % % % % % % % % STA #2
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{2}.NumSpaceTimeStreams = 1;
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{2}.MCS = MCS;
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{2}.APEPLength = APEPLength;
+% % % % % % % % % % % % % % % % % % % % % % % % STA #3
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{3}.NumSpaceTimeStreams = 1;
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{3}.MCS = MCS;
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{3}.APEPLength = APEPLength;
+% % % % % % % % % % % % % % % % % % % % % % % % STA #4
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{4}.NumSpaceTimeStreams = 1;
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{4}.MCS = MCS;
+% % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.User{4}.APEPLength = APEPLength;
 
 %%
 % Next the OFDMA configuration is defined. The allocation index |112|
@@ -111,81 +116,85 @@ cfgMUMIMO.User{4}.APEPLength = 1000;
 % OFDMA configuration - 4 users, each on a 52-tone RU
 cfgOFDMA = wlanHEMUConfig(112);
 
-%%
+numTx = 6; % Number of transmit antennas
+guardInterval = 0.8; % Guard interval in Microseconds
+
 % The allocation plot shows the four RUs, each with a single user. When
 % comparing this allocation plot to the full band MU-MIMO plot, it is
 % apparent that the total number of subcarriers used (4x52 = 208
 % subcarriers) is less than the MU-MIMO allocation (242 subcarriers). The
 % fewer number of subcarriers allow guards between each OFDMA user.
 
-showAllocation(cfgOFDMA);
+%showAllocation(cfgOFDMA);
 
-%%
 % The transmission parameters for each user are now configured.
 
 % Configure common parameters for all users
 cfgOFDMA.NumTransmitAntennas = numTx;
 cfgOFDMA.GuardInterval = guardInterval;
 
+MCS = 1; % QPSK = 1
+APEPLength = 1000;
+
 % Configure per user parameters
 % STA #1 (RU #1)
 cfgOFDMA.User{1}.NumSpaceTimeStreams = 2;
-cfgOFDMA.User{1}.MCS = 4;
-cfgOFDMA.User{1}.APEPLength = 1000;
+cfgOFDMA.User{1}.MCS = MCS;
+cfgOFDMA.User{1}.APEPLength = APEPLength;
 % STA #2 (RU #2)
 cfgOFDMA.User{2}.NumSpaceTimeStreams = 2;
-cfgOFDMA.User{2}.MCS = 4;
-cfgOFDMA.User{2}.APEPLength = 1000;
+cfgOFDMA.User{2}.MCS = MCS;
+cfgOFDMA.User{2}.APEPLength = APEPLength;
 % STA #3 (RU #3)
 cfgOFDMA.User{3}.NumSpaceTimeStreams = 2;
-cfgOFDMA.User{3}.MCS = 4;
-cfgOFDMA.User{3}.APEPLength = 1000;
+cfgOFDMA.User{3}.MCS = MCS;
+cfgOFDMA.User{3}.APEPLength = APEPLength;
 % STA #4 (RU #4)
 cfgOFDMA.User{4}.NumSpaceTimeStreams = 2;
-cfgOFDMA.User{4}.MCS = 4;
-cfgOFDMA.User{4}.APEPLength = 1000;
+cfgOFDMA.User{4}.MCS = MCS;
+cfgOFDMA.User{4}.APEPLength = APEPLength;
 
 %%
-% Finally, the mixed MU-MIMO and OFDMA configuration is defined. The
-% allocation index |25| defines a 106-tone RU with two users, and two
-% 52-tone RUs, each with one user.
-
-% Mixed OFDMA and MU-MIMO configuration
-cfgMixed = wlanHEMUConfig(25);
-
-%%
-% The allocation plot shows the three RUs, one with 2 users (MU-MIMO), and
-% the others with one user each (OFDMA).
-
-showAllocation(cfgMixed);
-
-%%
-% The transmission parameters for each user are now configured.
-
-% Configure common parameters for all users
-cfgMixed.NumTransmitAntennas = numTx;
-cfgMixed.GuardInterval = guardInterval;
-
-% Configure per user parameters
-% RU #1 has two users (MU-MIMO) and a total of 2 STS (1 per user)
-% STA #1 (RU #1)
-cfgMixed.User{1}.NumSpaceTimeStreams = 1;
-cfgMixed.User{1}.MCS = 4;
-cfgMixed.User{1}.APEPLength = 1000;
-% STA #2 (RU #1)
-cfgMixed.User{2}.NumSpaceTimeStreams = 1;
-cfgMixed.User{2}.MCS = 4;
-cfgMixed.User{2}.APEPLength = 1000;
-
-% The remaining two users are OFDMA
-% STA #3 (RU #2)
-cfgMixed.User{3}.NumSpaceTimeStreams = 2;
-cfgMixed.User{3}.MCS = 4;
-cfgMixed.User{3}.APEPLength = 1000;
-% STA #4 (RU #3)
-cfgMixed.User{4}.NumSpaceTimeStreams = 2;
-cfgMixed.User{4}.MCS = 4;
-cfgMixed.User{4}.APEPLength = 1000;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % Finally, the mixed MU-MIMO and OFDMA configuration is defined. The
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % allocation index |25| defines a 106-tone RU with two users, and two
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % 52-tone RUs, each with one user.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % Mixed OFDMA and MU-MIMO configuration
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed = wlanHEMUConfig(25);
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % %%
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % The allocation plot shows the three RUs, one with 2 users (MU-MIMO), and
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % the others with one user each (OFDMA).
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % showAllocation(cfgMixed);
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % %%
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % The transmission parameters for each user are now configured.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % Configure common parameters for all users
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.NumTransmitAntennas = numTx;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.GuardInterval = guardInterval;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % Configure per user parameters
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % RU #1 has two users (MU-MIMO) and a total of 2 STS (1 per user)
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % STA #1 (RU #1)
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{1}.NumSpaceTimeStreams = 1;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{1}.MCS = 4;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{1}.APEPLength = 1000;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % STA #2 (RU #1)
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{2}.NumSpaceTimeStreams = 1;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{2}.MCS = 4;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{2}.APEPLength = 1000;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % The remaining two users are OFDMA
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % STA #3 (RU #2)
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{3}.NumSpaceTimeStreams = 2;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{3}.MCS = 4;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{3}.APEPLength = 1000;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % STA #4 (RU #3)
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{4}.NumSpaceTimeStreams = 2;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{4}.MCS = 4;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMixed.User{4}.APEPLength = 1000;
 
 %% Channel Model Configuration
 % A TGax indoor channel model is used in this example. An individual
@@ -204,8 +213,8 @@ tgaxBase.DelayProfile = 'Model-D';     % Delay profile
 tgaxBase.NumTransmitAntennas = numTx;  % Number of transmit antennas
 tgaxBase.NumReceiveAntennas = 2;       % Each user has two receive antennas
 tgaxBase.TransmitReceiveDistance = 10; % Non-line of sight distance
-tgaxBase.ChannelBandwidth = cfgMUMIMO.ChannelBandwidth;
-tgaxBase.SampleRate = wlanSampleRate(cfgMUMIMO);
+tgaxBase.ChannelBandwidth = cfgOFDMA.ChannelBandwidth;
+tgaxBase.SampleRate = wlanSampleRate(cfgOFDMA);
 % Set a fixed seed for the channel
 tgaxBase.RandomStream = 'mt19937ar with seed';
 tgaxBase.Seed = 5;
@@ -221,7 +230,7 @@ tgaxBase.Seed = 5;
 %
 
 % A cell array stores the channel objects, one per user
-numUsers = numel(cfgMixed.User); % Number of users simulated in this example
+numUsers = numel(cfgOFDMA.User); % Number of users simulated in this example
 tgax = cell(1,numUsers);
 
 % Generate per-user channels
@@ -252,8 +261,8 @@ end
 % enough LTF symbols
 cfgNDP = wlanHESUConfig('APEPLength',0,'GuardInterval',0.8); % No data in an NDP
 cfgNDP.ChannelBandwidth = tgaxBase.ChannelBandwidth;
-cfgNDP.NumTransmitAntennas = cfgMUMIMO.NumTransmitAntennas;
-cfgNDP.NumSpaceTimeStreams = cfgMUMIMO.NumTransmitAntennas;
+cfgNDP.NumTransmitAntennas = cfgOFDMA.NumTransmitAntennas;
+cfgNDP.NumSpaceTimeStreams = cfgOFDMA.NumTransmitAntennas;
 
 % Generate NDP packet - with an empty PSDU as no data
 txNDP = wlanWaveformGenerator([],cfgNDP);
@@ -334,51 +343,51 @@ end
 disp('Simulating OFDMA...');
 throughputOFDMA = heMUSimulateScenario(cfgOFDMA,tgax,cfgSim);
 
-%% Simulation with MU-MIMO
-% Now the scenario is simulated with the MU-MIMO configuration. The
-% |heMUCalculateSteeringMatrix| helper function calculates the beamforming
-% matrix for an RU given the CSI feedback for all users in the MU-MIMO
-% allocation. A zero forcing solution is used to calculate the steering
-% matrix within the helper function.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %% Simulation with MU-MIMO
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % Now the scenario is simulated with the MU-MIMO configuration. The
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % |heMUCalculateSteeringMatrix| helper function calculates the beamforming
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % matrix for an RU given the CSI feedback for all users in the MU-MIMO
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % allocation. A zero forcing solution is used to calculate the steering
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % matrix within the helper function.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % Calculate the steering matrix to apply to the RU given the feedback
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % ruIdx = 1; % Index of the one and only RU
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % steeringMatrix = heMUCalculateSteeringMatrix(staFeedback,cfgMUMIMO,cfgNDP,ruIdx);
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % Apply the steering matrix to the RU
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.RU{1}.SpatialMapping = 'Custom';
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % cfgMUMIMO.RU{1}.SpatialMappingMatrix = steeringMatrix;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %%
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % Run the simulation for the MU-MIMO configuration.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % disp('Simulating MU-MIMO...');
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % throughputMUMIMO = heMUSimulateScenario(cfgMUMIMO,tgax,cfgSim);
 
-% Calculate the steering matrix to apply to the RU given the feedback
-ruIdx = 1; % Index of the one and only RU
-steeringMatrix = heMUCalculateSteeringMatrix(staFeedback,cfgMUMIMO,cfgNDP,ruIdx);
-
-% Apply the steering matrix to the RU
-cfgMUMIMO.RU{1}.SpatialMapping = 'Custom';
-cfgMUMIMO.RU{1}.SpatialMappingMatrix = steeringMatrix;
-
-%%
-% Run the simulation for the MU-MIMO configuration.
-
-disp('Simulating MU-MIMO...');
-throughputMUMIMO = heMUSimulateScenario(cfgMUMIMO,tgax,cfgSim);
-
-%% Simulation with Combined MU-MIMO and OFDMA
-% Finally, the scenario is simulated with the combined MU-MIMO and OFDMA
-% configuration.
-%
-% The steering matrix for each RU is calculated using the feedback from the
-% STAs, including the MU-MIMO RU. The |heMUCalculateSteeringMatrix| helper
-% function calculates the beamforming matrix for an RU given the CSI
-% feedback.
-
-% For each RU calculate the steering matrix to apply
-for ruIdx = 1:numel(cfgMixed.RU)
-    % Calculate the steering matrix to apply to the RU given the feedback
-    steeringMatrix = heMUCalculateSteeringMatrix(staFeedback,cfgMixed,cfgNDP,ruIdx);
-
-    % Apply the steering matrix to each RU
-    cfgMixed.RU{ruIdx}.SpatialMapping = 'Custom';
-    cfgMixed.RU{ruIdx}.SpatialMappingMatrix = steeringMatrix;
-end
-
-%%
-% Run the simulation for the combined MU-MIMO and OFDMA configuration.
-
-disp('Simulating Mixed MU-MIMO and OFDMA...');
-throughputMixed = heMUSimulateScenario(cfgMixed,tgax,cfgSim);
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % %% Simulation with Combined MU-MIMO and OFDMA
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % Finally, the scenario is simulated with the combined MU-MIMO and OFDMA
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % configuration.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % The steering matrix for each RU is calculated using the feedback from the
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % STAs, including the MU-MIMO RU. The |heMUCalculateSteeringMatrix| helper
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % function calculates the beamforming matrix for an RU given the CSI
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % feedback.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % For each RU calculate the steering matrix to apply
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % for ruIdx = 1:numel(cfgMixed.RU)
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % %     % Calculate the steering matrix to apply to the RU given the feedback
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % %     steeringMatrix = heMUCalculateSteeringMatrix(staFeedback,cfgMixed,cfgNDP,ruIdx);
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % %     % Apply the steering matrix to each RU
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % %     cfgMixed.RU{ruIdx}.SpatialMapping = 'Custom';
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % %     cfgMixed.RU{ruIdx}.SpatialMappingMatrix = steeringMatrix;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % end
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % %%
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % Run the simulation for the combined MU-MIMO and OFDMA configuration.
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % disp('Simulating Mixed MU-MIMO and OFDMA...');
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % throughputMixed = heMUSimulateScenario(cfgMixed,tgax,cfgSim);
 
 %% Plot Results
 % The raw AP throughput for each transmission mode is plotted. The results
@@ -395,13 +404,13 @@ throughputMixed = heMUSimulateScenario(cfgMixed,tgax,cfgSim);
 % Sum throughput for all STAs and plot for all configurations
 figure;
 plot(cfgSim.Pathloss,sum(throughputOFDMA,2),'-x');
-hold on;
-plot(cfgSim.Pathloss,sum(throughputMUMIMO,2),'-o');
-plot(cfgSim.Pathloss,sum(throughputMixed,2),'-s');
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % hold on;
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % plot(cfgSim.Pathloss,sum(throughputMUMIMO,2),'-o');
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % plot(cfgSim.Pathloss,sum(throughputMixed,2),'-s');
 grid on;
 xlabel('Pathloss (dB)');
 ylabel('Throughput (Mbps)');
-legend('OFDMA','MU-MIMO','MU-MIMO & OFDMA');
+legend('OFDMA');
 title('Raw AP Throughput');
 
 %% Appendix
