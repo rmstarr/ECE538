@@ -113,10 +113,13 @@ clear all; close all; clc;
 % Next the OFDMA configuration is defined. The allocation index |112|
 % defines four 52-tone RUs, each serving a single user.
 
-% OFDMA configuration - 4 users, each on a 52-tone RU
-cfgOFDMA = wlanHEMUConfig(112);
+% Next the OFDMA configuration is defined. The allocation index |96|
+% defines two 106-tone RUs, each serving a single user.
 
-numTx = 6; % Number of transmit antennas
+% OFDMA configuration - 4 users, each on a 52-tone RU
+cfgOFDMA = wlanHEMUConfig(192);
+
+numTx = 1; % Number of transmit antennas
 guardInterval = 0.8; % Guard interval in Microseconds
 
 % The allocation plot shows the four RUs, each with a single user. When
@@ -138,21 +141,21 @@ APEPLength = 1000;
 
 % Configure per user parameters
 % STA #1 (RU #1)
-cfgOFDMA.User{1}.NumSpaceTimeStreams = 2;
+cfgOFDMA.User{1}.NumSpaceTimeStreams = 1;
 cfgOFDMA.User{1}.MCS = MCS;
 cfgOFDMA.User{1}.APEPLength = APEPLength;
-% STA #2 (RU #2)
-cfgOFDMA.User{2}.NumSpaceTimeStreams = 2;
-cfgOFDMA.User{2}.MCS = MCS;
-cfgOFDMA.User{2}.APEPLength = APEPLength;
-% STA #3 (RU #3)
-cfgOFDMA.User{3}.NumSpaceTimeStreams = 2;
-cfgOFDMA.User{3}.MCS = MCS;
-cfgOFDMA.User{3}.APEPLength = APEPLength;
-% STA #4 (RU #4)
-cfgOFDMA.User{4}.NumSpaceTimeStreams = 2;
-cfgOFDMA.User{4}.MCS = MCS;
-cfgOFDMA.User{4}.APEPLength = APEPLength;
+% % STA #2 (RU #2)
+% cfgOFDMA.User{2}.NumSpaceTimeStreams = 2;
+% cfgOFDMA.User{2}.MCS = MCS;
+% cfgOFDMA.User{2}.APEPLength = APEPLength;
+% % % % % STA #3 (RU #3)
+% % % % cfgOFDMA.User{3}.NumSpaceTimeStreams = 2;
+% % % % cfgOFDMA.User{3}.MCS = MCS;
+% % % % cfgOFDMA.User{3}.APEPLength = APEPLength;
+% % % % % STA #4 (RU #4)
+% % % % cfgOFDMA.User{4}.NumSpaceTimeStreams = 2;
+% % % % cfgOFDMA.User{4}.MCS = MCS;
+% % % % cfgOFDMA.User{4}.APEPLength = APEPLength;
 
 %%
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % Finally, the mixed MU-MIMO and OFDMA configuration is defined. The
@@ -211,7 +214,7 @@ cfgOFDMA.User{4}.APEPLength = APEPLength;
 tgaxBase = wlanTGaxChannel;
 tgaxBase.DelayProfile = 'Model-D';     % Delay profile
 tgaxBase.NumTransmitAntennas = numTx;  % Number of transmit antennas
-tgaxBase.NumReceiveAntennas = 2;       % Each user has two receive antennas
+tgaxBase.NumReceiveAntennas = 1;       % Each user has two receive antennas
 tgaxBase.TransmitReceiveDistance = 10; % Non-line of sight distance
 tgaxBase.ChannelBandwidth = cfgOFDMA.ChannelBandwidth;
 tgaxBase.SampleRate = wlanSampleRate(cfgOFDMA);
@@ -286,7 +289,7 @@ end
 
 cfgSim = struct;
 cfgSim.NumPackets = 10;       % Number of packets to simulate for each path loss
-cfgSim.Pathloss = (96:3:105); % Path losses to simulate in dB
+cfgSim.Pathloss = 0;      % Path losses to simulate in dB
 cfgSim.TransmitPower = 30;    % AP transmit power in dBm
 cfgSim.NoiseFloor = -89.9;    % STA noise floor in dBm
 cfgSim.IdleTime = 20;         % Idle time between packets in us
@@ -305,8 +308,8 @@ for ruIdx = 1:numel(cfgOFDMA.RU)
     steeringMatrix = heMUCalculateSteeringMatrix(staFeedback,cfgOFDMA,cfgNDP,ruIdx);
 
     % Apply the steering matrix to each RU
-    cfgOFDMA.RU{ruIdx}.SpatialMapping = 'Custom';
-    cfgOFDMA.RU{ruIdx}.SpatialMappingMatrix = steeringMatrix;
+    cfgOFDMA.RU{ruIdx}.SpatialMapping = 'Direct';
+    %cfgOFDMA.RU{ruIdx}.SpatialMappingMatrix = steeringMatrix;
 end
 
 %%
