@@ -59,8 +59,8 @@ for ipl = 1:numPL
 
     % Create an instance of the AWGN channel per SNR point simulated
     fs = wlanSampleRate(cfg);
-    awgnChannel = comm.AWGNChannel('NoiseMethod','Signal to noise ratio (SNR)', ...
-        'SNR',transmitPower-noiseFloor); % 10^((-89.9 - 30 + pathloss)/10)
+    awgnChannel = comm.AWGNChannel('NoiseMethod','Variance', ...
+        'Variance',10^((noiseFloor - 30 + pathloss(ipl))/10)); % 10^((-89.9 - 30 + pathloss)/10)
 
     numPacketErrors = zeros(allocInfo.NumUsers,1);
 
@@ -102,11 +102,13 @@ for ipl = 1:numPL
                 %rx = tgaxClone{userIdx}(tx);
 
                 % Add noise at receiver (assuming pathloss and noise floor)
-                rx = awgnChannel(tx);% + awgnChannel(jam);
+                rx = awgnChannel(tx) + awgnChannel(jam);
+                
+                noise = awgnChannel(noisevector);
                 
                 mag_rx = abs(rx);
-                        
-                SNR = snr(mag_rx, noisevector);
+                
+                SNR = snr(mag_rx, noise);
                 disp(["SNR: ", SNR]);
 
                 if timingSync
