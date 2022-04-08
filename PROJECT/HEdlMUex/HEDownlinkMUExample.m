@@ -289,7 +289,7 @@ end
 
 cfgSim = struct;
 cfgSim.NumPackets = 10;       % Number of packets to simulate for each path loss
-cfgSim.Pathloss = 0;      % Path losses to simulate in dB
+cfgSim.Pathloss = 113:1:117;        % Path losses to simulate in dB
 cfgSim.TransmitPower = 30;    % AP transmit power in dBm
 cfgSim.NoiseFloor = -89.9;    % STA noise floor in dBm
 cfgSim.IdleTime = 20;         % Idle time between packets in us
