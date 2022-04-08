@@ -59,8 +59,8 @@ for ipl = 1:numPL
 
     % Create an instance of the AWGN channel per SNR point simulated
     fs = wlanSampleRate(cfg);
-    awgnChannel = comm.AWGNChannel('NoiseMethod','Variance',...
-        'Variance',10^((noiseFloor-30+pathloss(ipl))/10));
+    awgnChannel = comm.AWGNChannel('NoiseMethod','Signal to noise ratio (SNR)', ...
+        'SNR',transmitPower-noiseFloor); % 10^((-89.9 - 30 + pathloss)/10)
 
     numPacketErrors = zeros(allocInfo.NumUsers,1);
 
@@ -71,13 +71,23 @@ for ipl = 1:numPL
         txPSDU = cell(allocInfo.NumUsers,1);
         for userIdx = 1:allocInfo.NumUsers
             txPSDU{userIdx} = randi([0 1],psduLength(userIdx)*8,1,'int8');
+            jamPSDU{userIdx} = randi([0 1],psduLength(userIdx)*8,1,'int8');
         end
 
         % Generate waveform with idle period
         tx = wlanWaveformGenerator(txPSDU,cfg,'IdleTime',idleTime*1e-6);
+        jam = wlanWaveformGenerator(jamPSDU,cfg,'IdleTime',idleTime*1e-6);
 
         % Scale to achieve desired transmit power
         tx = tx*A;
+        
+        mag_tx = abs(tx);
+        
+        noisevector = wgn(length(mag_tx),1,noiseFloor, 'dBm');
+        
+        SNR = snr(mag_tx, noisevector);
+        disp(["SNR: ", SNR]);
+
 
         chanBW = cfg.ChannelBandwidth;
 
@@ -89,10 +99,15 @@ for ipl = 1:numPL
             % Loop over users within an RU
             for ruUserIdx = 1:allocInfo.NumUsersPerRU(ruIdx)
                 % Pass waveform through a channel for each user
-                rx = tgaxClone{userIdx}(tx);
+                %rx = tgaxClone{userIdx}(tx);
 
                 % Add noise at receiver (assuming pathloss and noise floor)
-                rx = awgnChannel(rx);
+                rx = awgnChannel(tx);% + awgnChannel(jam);
+                
+                mag_rx = abs(rx);
+                        
+                SNR = snr(mag_rx, noisevector);
+                disp(["SNR: ", SNR]);
 
                 if timingSync
                     % Packet detect and determine coarse packet offset
