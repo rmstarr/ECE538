@@ -24,6 +24,7 @@ pathloss = cfgSim.Pathloss;
 noiseFloor = cfgSim.NoiseFloor;
 idleTime = cfgSim.IdleTime; % us
 transmitPower = cfgSim.TransmitPower; % dBm
+standardPacket = randi([0 1], 1000, 1, 'int8'); % packet preamble 
 
 % Perform synchronization with 11ac components
 timingSync = true;
@@ -67,28 +68,21 @@ for ipl = 1:numPL
     % Simulate multiple packets
     for pktIdx = 1:numPackets
         % Generate random data for all users
-        psduLength = getPSDULength(cfg);
+        psduLength = getPSDULength(cfg) - length(standardPacket)/8;
         txPSDU = cell(allocInfo.NumUsers,1);
         for userIdx = 1:allocInfo.NumUsers
-            txPSDU{userIdx} = randi([0 1],psduLength(userIdx)*8,1,'int8');
-            jamPSDU{userIdx} = randi([0 1],psduLength(userIdx)*8,1,'int8');
+            txPSDU{userIdx} = [standardPacket; randi([0 1],psduLength(userIdx)*8,1,'int8')];
         end
 
         % Generate waveform with idle period
         tx = wlanWaveformGenerator(txPSDU,cfg,'IdleTime',idleTime*1e-6);
-        jam = wlanWaveformGenerator(jamPSDU,cfg,'IdleTime',idleTime*1e-6);
 
         % Scale to achieve desired transmit power
         tx = tx*A;
-        
         mag_tx = abs(tx);
-        
         noisevector = wgn(length(mag_tx),1,noiseFloor, 'dBm');
-        
-        SNR = snr(mag_tx, noisevector);
-        disp(["SNR: ", SNR]);
-
-
+        TxSNR = snr(mag_tx, noisevector);
+        % disp(["SNR: ", TxSNR]);
         chanBW = cfg.ChannelBandwidth;
 
         % Per user processing
@@ -102,14 +96,13 @@ for ipl = 1:numPL
                 %rx = tgaxClone{userIdx}(tx);
 
                 % Add noise at receiver (assuming pathloss and noise floor)
-                rx = awgnChannel(tx) + awgnChannel(jam);
-                
+                % jam = constantJammer(psduLength(userIdx)*8, cfg, idleTime);
+                % jam = deceptiveJammer(psduLength(userIdx)*8, cfg, idleTime, standardPacket);
+                rx = awgnChannel(tx); % + awgnChannel(jam);
                 noise = awgnChannel(noisevector);
-                
                 mag_rx = abs(rx);
-                
-                SNR = snr(mag_rx, noise);
-                disp(["SNR: ", SNR]);
+                RxSNR = snr(mag_rx, noise);
+                disp(["SNR: ", RxSNR]);
 
                 if timingSync
                     % Packet detect and determine coarse packet offset
@@ -187,8 +180,12 @@ for ipl = 1:numPL
                 rxPSDU = wlanHEDataBitRecover(rxDataUser,nVarEst,csiData,cfg,userIdx,'LDPCDecodingMethod','layered-bp');
 
                 % Compare bit error
-                packetError = ~isequal(txPSDU{userIdx},rxPSDU);
-                numPacketErrors(userIdx) = numPacketErrors(userIdx)+packetError;
+                BER = sum(rxPSDU~=txPSDU{userIdx})/length(rxPSDU);
+                packetError = 0;
+                if BER > 0.25 % 25% BER = Packet Error
+                    packetError = packetError + 1;
+                    numPacketErrors(userIdx) = numPacketErrors(userIdx)+packetError;
+                end
                 userIdx = userIdx+1;
             end
         end
