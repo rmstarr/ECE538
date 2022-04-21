@@ -290,7 +290,7 @@ end
 
 cfgSim = struct;
 cfgSim.NumPackets = 10;       % Number of packets to simulate for each path loss
-cfgSim.Distance = 5:5:145;  % Path losses to simulate in dB
+cfgSim.Distance = 5:5:125;  % Path losses to simulate in dB
 cfgSim.TransmitPower = 0;    % AP transmit power in dBm
 cfgSim.NoiseFloor = -89.9;    % STA noise floor in dBm
 cfgSim.IdleTime = 20;         % Idle time between packets in us
@@ -407,66 +407,71 @@ disp('Simulating OFDMA...');
 
 % Sum throughput for all STAs and plot for all configurations
 figure();
-plot(cfgSim.Distance,throughput(:,1));
+plot(cfgSim.Distance,throughput(:,1),'Linewidth',1);
 hold on;
 grid on;
-plot(cfgSim.Distance,throughput(:,2));
-plot(cfgSim.Distance,throughput(:,3));
-plot(cfgSim.Distance,throughput(:,4));
+plot(cfgSim.Distance,throughput(:,2),'Linewidth',1);
+plot(cfgSim.Distance,throughput(:,3),'Linewidth',1);
+plot(cfgSim.Distance,throughput(:,4),'Linewidth',1);
 xlabel('Distance (m)');
-ylim([-2 16])
+xlim([0 130]);
+ylim([-2 16]);
 ylabel('Throughput (Mbps)');
 legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
 title('Raw AP Throughput');
 
 figure();
-plot(cfgSim.Distance,BER(:,1));
+plot(cfgSim.Distance,BER(:,1),'Linewidth',1);
 hold on;
 grid on;
-plot(cfgSim.Distance,BER(:,2));
-plot(cfgSim.Distance,BER(:,3));
-plot(cfgSim.Distance,BER(:,4));
+plot(cfgSim.Distance,BER(:,2),'Linewidth',1);
+plot(cfgSim.Distance,BER(:,3),'Linewidth',1);
+plot(cfgSim.Distance,BER(:,4),'Linewidth',1);
 xlabel('Distance (m)');
-ylim([-10 110])
+xlim([0 130]);
+ylim([-10 110]);
 ylabel('BER (%)');
 legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
-title('BER');
+title('Bit Error Rate');
 
 figure();
-plot(cfgSim.Distance,PER(:,1));
+plot(cfgSim.Distance,PER(:,1),'Linewidth',1);
 hold on;
 grid on;
-plot(cfgSim.Distance,PER(:,2));
-plot(cfgSim.Distance,PER(:,3));
-plot(cfgSim.Distance,PER(:,4));
+plot(cfgSim.Distance,PER(:,2),'Linewidth',1);
+plot(cfgSim.Distance,PER(:,3),'Linewidth',1);
+plot(cfgSim.Distance,PER(:,4),'Linewidth',1);
 xlabel('Distance (m)');
-ylim([-10 110])
+xlim([0 130]);
+ylim([-10 110]);
 ylabel('PER (%)');
 legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
-title('PER');
+title('Packet Error Rate');
 
 figure();
-plot(cfgSim.Distance,RSS(:,1));
+plot(cfgSim.Distance,RSS(:,1),'Linewidth',1);
 hold on;
 grid on;
-plot(cfgSim.Distance,RSS(:,2));
-plot(cfgSim.Distance,RSS(:,3));
-plot(cfgSim.Distance,RSS(:,4));
+plot(cfgSim.Distance,RSS(:,2),'Linewidth',1);
+plot(cfgSim.Distance,RSS(:,3),'Linewidth',1);
+plot(cfgSim.Distance,RSS(:,4),'Linewidth',1);
 xlabel('Distance (m)');
-ylim([-90 -50])
+xlim([0 130]);
+ylim([-90 -50]);
 ylabel('RSS (dBm)');
 legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
 title('RSS');
 
 figure();
-plot(cfgSim.Distance,SNR(:,1));
+plot(cfgSim.Distance,SNR(:,1),'Linewidth',1);
 hold on;
 grid on;
-plot(cfgSim.Distance,SNR(:,2));
-plot(cfgSim.Distance,SNR(:,3));
-plot(cfgSim.Distance,SNR(:,4));
+plot(cfgSim.Distance,SNR(:,2),'Linewidth',1);
+plot(cfgSim.Distance,SNR(:,3),'Linewidth',1);
+plot(cfgSim.Distance,SNR(:,4),'Linewidth',1);
 xlabel('Distance (m)');
-ylim([0 40])
+xlim([0 130]);
+ylim([0 40]);
 ylabel('SNR (dB)');
 legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
 title('SNR');
