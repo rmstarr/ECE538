@@ -117,9 +117,10 @@ clear all; close all; clc;
 % defines two 106-tone RUs, each serving a single user.
 
 % OFDMA configuration - 4 users, each on a 52-tone RU
-cfgOFDMA = wlanHEMUConfig(192);
+cfgOFDMA = wlanHEMUConfig(96);
+carriers = 1;
 
-numTx = 1; % Number of transmit antennas
+numTx = carriers; % Number of transmit antennas
 guardInterval = 0.8; % Guard interval in Microseconds
 
 % The allocation plot shows the four RUs, each with a single user. When
@@ -137,25 +138,25 @@ cfgOFDMA.NumTransmitAntennas = numTx;
 cfgOFDMA.GuardInterval = guardInterval;
 
 MCS = 1; % QPSK = 1
-APEPLength = 1125;
+APEPLength = 1250;
 
 % Configure per user parameters
 % STA #1 (RU #1)
-cfgOFDMA.User{1}.NumSpaceTimeStreams = 1;
+cfgOFDMA.User{1}.NumSpaceTimeStreams = carriers;
 cfgOFDMA.User{1}.MCS = MCS;
 cfgOFDMA.User{1}.APEPLength = APEPLength;
-% % STA #2 (RU #2)
-% cfgOFDMA.User{2}.NumSpaceTimeStreams = 2;
-% cfgOFDMA.User{2}.MCS = MCS;
-% cfgOFDMA.User{2}.APEPLength = APEPLength;
+% STA #2 (RU #2)
+cfgOFDMA.User{2}.NumSpaceTimeStreams = carriers;
+cfgOFDMA.User{2}.MCS = MCS;
+cfgOFDMA.User{2}.APEPLength = APEPLength;
 % % % % % STA #3 (RU #3)
-% % % % cfgOFDMA.User{3}.NumSpaceTimeStreams = 2;
-% % % % cfgOFDMA.User{3}.MCS = MCS;
-% % % % cfgOFDMA.User{3}.APEPLength = APEPLength;
-% % % % % STA #4 (RU #4)
-% % % % cfgOFDMA.User{4}.NumSpaceTimeStreams = 2;
-% % % % cfgOFDMA.User{4}.MCS = MCS;
-% % % % cfgOFDMA.User{4}.APEPLength = APEPLength;
+% cfgOFDMA.User{3}.NumSpaceTimeStreams = carriers;
+% cfgOFDMA.User{3}.MCS = MCS;
+% cfgOFDMA.User{3}.APEPLength = APEPLength;
+% % STA #4 (RU #4)
+% cfgOFDMA.User{4}.NumSpaceTimeStreams = carriers;
+% cfgOFDMA.User{4}.MCS = MCS;
+% cfgOFDMA.User{4}.APEPLength = APEPLength;
 
 %%
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % Finally, the mixed MU-MIMO and OFDMA configuration is defined. The
@@ -214,7 +215,7 @@ cfgOFDMA.User{1}.APEPLength = APEPLength;
 tgaxBase = wlanTGaxChannel;
 tgaxBase.DelayProfile = 'Model-D';     % Delay profile
 tgaxBase.NumTransmitAntennas = numTx;  % Number of transmit antennas
-tgaxBase.NumReceiveAntennas = 1;       % Each user has two receive antennas
+tgaxBase.NumReceiveAntennas = carriers;       % Each user has two receive antennas
 tgaxBase.TransmitReceiveDistance = 10; % Non-line of sight distance
 tgaxBase.ChannelBandwidth = cfgOFDMA.ChannelBandwidth;
 tgaxBase.SampleRate = wlanSampleRate(cfgOFDMA);
@@ -289,8 +290,8 @@ end
 
 cfgSim = struct;
 cfgSim.NumPackets = 10;       % Number of packets to simulate for each path loss
-cfgSim.Pathloss = 110:1:117;  % Path losses to simulate in dB
-cfgSim.TransmitPower = 30;    % AP transmit power in dBm
+cfgSim.Distance = 5:5:145;  % Path losses to simulate in dB
+cfgSim.TransmitPower = 0;    % AP transmit power in dBm
 cfgSim.NoiseFloor = -89.9;    % STA noise floor in dBm
 cfgSim.IdleTime = 20;         % Idle time between packets in us
 
@@ -344,7 +345,7 @@ end
 % The simulation is run for the OFDMA configuration.
 
 disp('Simulating OFDMA...');
-throughputOFDMA = heMUSimulateScenario(cfgOFDMA,tgax,cfgSim);
+[throughput,BER,PER,RSS,SNR] = heMUSimulateScenario(cfgOFDMA,tgax,cfgSim);
 
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %% Simulation with MU-MIMO
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % Now the scenario is simulated with the MU-MIMO configuration. The
@@ -405,16 +406,70 @@ throughputOFDMA = heMUSimulateScenario(cfgOFDMA,tgax,cfgSim);
 % differs due to different RU sizes and number of space-time streams.
 
 % Sum throughput for all STAs and plot for all configurations
-figure;
-plot(cfgSim.Pathloss,sum(throughputOFDMA,2),'-x');
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % hold on;
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % plot(cfgSim.Pathloss,sum(throughputMUMIMO,2),'-o');
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % plot(cfgSim.Pathloss,sum(throughputMixed,2),'-s');
+figure();
+plot(cfgSim.Distance,throughput(:,1));
+hold on;
 grid on;
-xlabel('Pathloss (dB)');
+plot(cfgSim.Distance,throughput(:,2));
+plot(cfgSim.Distance,throughput(:,3));
+plot(cfgSim.Distance,throughput(:,4));
+xlabel('Distance (m)');
+ylim([-2 16])
 ylabel('Throughput (Mbps)');
-legend('OFDMA');
+legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
 title('Raw AP Throughput');
+
+figure();
+plot(cfgSim.Distance,BER(:,1));
+hold on;
+grid on;
+plot(cfgSim.Distance,BER(:,2));
+plot(cfgSim.Distance,BER(:,3));
+plot(cfgSim.Distance,BER(:,4));
+xlabel('Distance (m)');
+ylim([-10 110])
+ylabel('BER (%)');
+legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
+title('BER');
+
+figure();
+plot(cfgSim.Distance,PER(:,1));
+hold on;
+grid on;
+plot(cfgSim.Distance,PER(:,2));
+plot(cfgSim.Distance,PER(:,3));
+plot(cfgSim.Distance,PER(:,4));
+xlabel('Distance (m)');
+ylim([-10 110])
+ylabel('PER (%)');
+legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
+title('PER');
+
+figure();
+plot(cfgSim.Distance,RSS(:,1));
+hold on;
+grid on;
+plot(cfgSim.Distance,RSS(:,2));
+plot(cfgSim.Distance,RSS(:,3));
+plot(cfgSim.Distance,RSS(:,4));
+xlabel('Distance (m)');
+ylim([-90 -50])
+ylabel('RSS (dBm)');
+legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
+title('RSS');
+
+figure();
+plot(cfgSim.Distance,SNR(:,1));
+hold on;
+grid on;
+plot(cfgSim.Distance,SNR(:,2));
+plot(cfgSim.Distance,SNR(:,3));
+plot(cfgSim.Distance,SNR(:,4));
+xlabel('Distance (m)');
+ylim([0 40])
+ylabel('SNR (dB)');
+legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
+title('SNR');
 
 %% Appendix
 % This example uses these helper functions.
