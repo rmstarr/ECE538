@@ -476,6 +476,57 @@ ylabel('SNR (dB)');
 legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
 title('SNR');
 
+%% Detector Decision Tree
+figure();
+jam = 1:4;
+TPcompPoints = [13*ones(1,14) 10 7 4 zeros(1,8)];
+BERcompPoints = [5*ones(1,14) 12 25 42 57 65 84 90 90 90 90 90];
+PERcompPoints = [18*ones(1,15) 43 63 97 100*ones(1,7)];
+RSScompPoints = [-61 -67 -70 -73 -75 -76 -77 -78 -79 -80 -81 -81 -82 -83 -83 -84 -84 -84 -84 -85 -85 -86 -86 -86 -86 -86];
+SNRcompPoints = RSScompPoints - cfgSim.NoiseFloor;
+for i = 1:length(jam)
+    detectIndicator = zeros(5,length(cfgSim.Distance));
+    likelihood = zeros(1,length(cfgSim.Distance));
+    for d = 1:length(cfgSim.Distance)
+        % RSS
+        if RSS(d,i) > RSScompPoints(d)
+            detectIndicator(1,d) = 1;
+        end
+        % SNR
+        if SNR(d,i) > SNRcompPoints(d)
+            detectIndicator(2,d) = 1;
+        end
+        % TP
+        if throughput(d,i) < TPcompPoints(d)
+            detectIndicator(3,d) = 1;
+        end
+        % PER
+        if PER(d,i) > PERcompPoints(d)
+            detectIndicator(4,d) = 1;
+        end
+        % BER
+        if d < 18
+            if BER(d,i) > BERcompPoints(d)
+                detectIndicator(5,d) = 1;
+            end
+        elseif d >= 18
+            if BER(d,i) < BERcompPoints(d)
+                detectIndicator(5,d) = 1;
+            end
+        end
+        likelihood(d) = 100*sum(detectIndicator(:,d))/5;
+    end
+    plot(cfgSim.Distance,likelihood,'LineWidth',2);
+    hold on;
+end
+title("Likelihood of Jam based on Metrics")
+xlabel("Distance (m)");
+ylabel("Likelihood (%)");
+xlim([0 130]);
+ylim([-10 110]);
+legend('No Jam','Constant Jam','Deceptive Jam','Random Jam');
+grid on;
+
 %% Appendix
 % This example uses these helper functions.
 %
